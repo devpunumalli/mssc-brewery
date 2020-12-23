@@ -7,6 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +29,7 @@ return new ResponseEntity<>(customerService.getId(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity insertCustomer(@RequestBody CustomerDto customerDto){
+    public ResponseEntity insertCustomer(@Valid @RequestBody CustomerDto customerDto){
         CustomerDto insertedDto=customerService.insertCustomer(customerDto);
         HttpHeaders headers=new HttpHeaders();
         headers.add("location","/api/v1/customer/"+insertedDto.getId().toString());
@@ -33,7 +37,7 @@ return new ResponseEntity<>(customerService.getId(id), HttpStatus.OK);
     }
 
     @PutMapping({"/{customerId}"})
-    public ResponseEntity updateCustomer(@PathVariable(name = "customerId") UUID customerId, @RequestBody CustomerDto customerDto){
+    public ResponseEntity updateCustomer(@PathVariable(name = "customerId") UUID customerId, @Valid @RequestBody CustomerDto customerDto){
         customerService.updateCustomer(customerId,customerDto);
       return  new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -44,5 +48,6 @@ return new ResponseEntity<>(customerService.getId(id), HttpStatus.OK);
         customerService.deleteCustomer(customerId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
 
 }
